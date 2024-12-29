@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question,Long> {
     List<Question>findByCategory(String category);
+
+    List<Question> findRandomQuestionsCategory(String category, int numQ);
 }
