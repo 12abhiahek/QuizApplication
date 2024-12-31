@@ -3,6 +3,7 @@ package com.example.quizApplication.service;
 import com.example.quizApplication.entity.Question;
 import com.example.quizApplication.entity.QuestionWrapper;
 import com.example.quizApplication.entity.Quiz;
+import com.example.quizApplication.entity.Response;
 import com.example.quizApplication.repository.QuestionRepository;
 import com.example.quizApplication.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,21 @@ public class QuizService {
          }
          return new ResponseEntity<>(questionForUser,HttpStatus.OK);
 
+    }
+
+    public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses) {
+        Quiz quiz=quizRepository.findById(id).get();
+        List<Question>questions=quiz.getQuestions();
+        int right=0;
+        int i=0;
+        for(Response response:responses){
+            if(response.getResponse().equals(questions.get(i).getRightAnswer())){
+                right ++;
+
+            }
+           i++;
+
+        }
+        return new ResponseEntity<>(right,HttpStatus.OK);
     }
 }
