@@ -1,9 +1,10 @@
-package com.example.quizApplication.service;
+package com.example.question_service.service;
 
-import com.example.quizApplication.entity.Question;
-import com.example.quizApplication.entity.QuestionWrapper;
-import com.example.quizApplication.entity.Response;
-import com.example.quizApplication.repository.QuestionRepository;
+import com.example.question_service.entity.Question;
+import com.example.question_service.entity.QuestionWrapper;
+import com.example.question_service.entity.Response;
+import com.example.question_service.repository.QuestionRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class QuestionService {
@@ -22,9 +24,9 @@ public class QuestionService {
         try {
             return new ResponseEntity<>(questionRepository.findAll(), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+                e.printStackTrace();
         }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<List<Question>> getQuestionByCategory(String category) {
@@ -33,7 +35,7 @@ public class QuestionService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
     }
 
     public Question addquestion(Question question) {
@@ -54,54 +56,56 @@ public class QuestionService {
     }
 
     public ResponseEntity<String> deleteQuestion(Long id) {
-        if (questionRepository.existsById(id)) {
+        if(questionRepository.existsById(id)){
             questionRepository.deleteById(id);
             return ResponseEntity.ok("Question deleted successfully");
-        } else {
+        }else{
             return ResponseEntity.notFound().build();
         }
     }
 
-    public ResponseEntity<List<Integer>> getQuestionForQuiz(String categoryName, Integer numQuestions) {
-        List<Integer> questions = questionRepository.findRandomQuestionsCategory(categoryName, numQuestions);
+    public ResponseEntity<List<Integer>> getQuestionForQuiz(String categoryName, Integer numQuestion) {
+        List<Integer>questions=questionRepository.findRandomQuestionsCategory(categoryName,numQuestion);
 
         return new ResponseEntity<>(questions,HttpStatus.OK);
     }
 
-    public ResponseEntity<List<QuestionWrapper>> getqQuestionsFromId(List<Integer> questionIds) {
-
-        List<QuestionWrapper>wrapper= new ArrayList<>();
+    public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(List<Integer>questionIds) {
+        List<QuestionWrapper>wrappers=new ArrayList<>();
         List<Question>questions=new ArrayList<>();
 
-        for(Integer id: questionIds){
-            questions.add(questionRepository.findById(Long.valueOf(id)).get());
-
+        for(Integer id:questionIds){
+            questions.add(questionRepository.findById(id.longValue()).get());
         }
+
         for(Question question:questions){
-           QuestionWrapper wrappers= new QuestionWrapper();
-           wrappers.setId(question.getId());
-           wrappers.setQuestion_Title(question.getQuestion_Title());
-           wrappers.setOption1(question.getOption1());
-           wrappers.setOption2(question.getOption2());
-           wrappers.setOption3(question.getOption3());
-           wrappers.setOption4(question.getOption4());
+            QuestionWrapper wrapper=new QuestionWrapper();
+            wrapper.setId(question.getId());
+            wrapper.setQuestion_Title(question.getQuestion_Title());
+            wrapper.setOption1(question.getOption1());
+            wrapper.setOption2(question.getOption2());
+            wrapper.setOption3(question.getOption3());
+            wrapper.setOption4(question.getOption4());
 
-           wrapper.add(wrappers);
+
+            wrappers.add(wrapper);
         }
-        return new ResponseEntity<>(wrapper,HttpStatus.OK);
+        return  new ResponseEntity<>(wrappers,HttpStatus.OK);
     }
 
     public ResponseEntity<Integer> getScore(List<Response> responses) {
 
         int right=0;
+
         for(Response response:responses){
-            Question question= questionRepository.findById(Long.valueOf(response.getId())).get();
-            if(response.getResponse().equals(question.getRightAnswer()))
-                right++;
+            Question question= (Question) questionRepository.findById(response.getId()).get();
+            if(response.getResponse().equals(question.getRightAnswer())){
+                right ++;
+
+            }
 
         }
-        return new ResponseEntity<>(
-                right,HttpStatus.OK
-        );
+        return new ResponseEntity<>(right,HttpStatus.OK);
+
     }
 }

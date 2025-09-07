@@ -1,4 +1,4 @@
-package com.example.quizApplication.entity;
+package com.example.question_service.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,15 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QuestionWrapper {
     private Long Id;
-
-    public String getQuestion_Title() {
-        return Question_Title;
-    }
-
-    public void setQuestion_Title(String question_Title) {
-        Question_Title = question_Title;
-    }
-
     private String Question_Title;
     private String option1;
     private String option2;

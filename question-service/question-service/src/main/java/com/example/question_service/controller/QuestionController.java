@@ -1,9 +1,9 @@
-package com.example.quizApplication.controller;
+package com.example.question_service.controller;
 
-import com.example.quizApplication.entity.Question;
-import com.example.quizApplication.entity.QuestionWrapper;
-import com.example.quizApplication.entity.Response;
-import com.example.quizApplication.service.QuestionService;
+import com.example.question_service.entity.Question;
+import com.example.question_service.entity.QuestionWrapper;
+import com.example.question_service.entity.Response;
+import com.example.question_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,17 +40,18 @@ public class QuestionController {
     }
 
     @GetMapping("/generate")
-    public ResponseEntity<List<Integer>> getQuestionForQuiz(@RequestParam String categoryName, Integer numQuestions){
-        return questionService.getQuestionForQuiz(categoryName,numQuestions);
-
+    public ResponseEntity<List<Integer>>getQuestionForQuiz(@RequestParam String categoryName,@RequestParam Integer numQuestion){
+        return questionService.getQuestionForQuiz(categoryName,numQuestion);
     }
-
-    @PostMapping("/getquestions")
-    public ResponseEntity<List<QuestionWrapper>> getqQuestionsFromId(@RequestBody List<Integer>questionIds){
-      return questionService.getqQuestionsFromId(questionIds);
+    @PostMapping("/getquestion")
+    public ResponseEntity<List<QuestionWrapper>>getQuestionFromId(List<Integer>questionIds){
+       return questionService.getQuestionsFromId(questionIds);
     }
     @PostMapping("/getscore")
-    public ResponseEntity<Integer> getScore(@RequestBody List<Response>responses){
+    public  ResponseEntity<Integer>getScore(@RequestBody List<Response>responses){
         return questionService.getScore(responses);
     }
 }
+
+
+

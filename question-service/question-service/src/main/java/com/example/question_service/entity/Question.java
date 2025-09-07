@@ -1,9 +1,8 @@
-package com.example.quizApplication.entity;
+package com.example.question_service.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
@@ -12,15 +11,6 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @jakarta.persistence.Id
     private Long Id;
-
-    public String getQuestion_Title() {
-        return Question_Title;
-    }
-
-    public void setQuestion_Title(String question_Title) {
-        Question_Title = question_Title;
-    }
-
     private String Question_Title;
     private String option1;
     private String option2;
